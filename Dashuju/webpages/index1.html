@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="../css/base.css"/>
+    <link rel="stylesheet" href="../css/index.css"/>
+    <script src="../js/jquery-1.7.2.min.js"></script>
+    <script src="../js/echarts.js"></script>
+    <script src="../js/animateBackground-plugin.js"></script>
+    <script src="../js/china.js"></script>
+</head>
+<body>
+<div class="viewport">
+    <!--头部部分开始-->
+    <div class="topPart"><h4>空间决策大数据平台</h4></div>
+    <!--头部部分结束-->
+    <!--中间主要部分开始-->
+    <div class="mianPart">
+        <div class="mianCenter">
+            <!--中间左边部分开始-->
+            <div class="leftPart">
+                <div id="leftpartTop" class="leftpartTop">
+                </div>
+                <div class="blanck"></div>
+                <div id="leftpartBot" class="leftpartBot">
+                </div>
+            </div>
+            <!--中间左边部分结束-->
+            <!--中间部分开始-->
+            <div class="middlePart">
+                <div id="middlepartTop" class="middlepartTop"></div>
+                <div class="blanck"></div>
+                <div id="middlepartBot" class="middlepartBot"></div>
+            </div>
+            <!--中间部分结束-->
+            <!--中间右边部分开始-->
+            <div class="rightPart">
+                <div id="rightpartTop" class="rightpartTop">
+                    <img style="position:absolute;top:22%;left:12%;width:76%;height:46%;" src="../images/huan.png" alt=""/>
+                    <div class="tradeNumber">
+                        <h3>累计交易额:</h3>
+                        <h1><span class="t_num"></span>万元</h1>
+                    </div>
+                </div>
+                <div class="blanck"></div>
+                <div id="rightpartBot" class="rightpartBot"></div>
+            </div>
+            <!--中间右边部分结束-->
+        </div>
+    </div>
+    <!--中间主要部分结束-->
+    <!--底部部分开始-->
+    <div class="botPart"></div>
+    <!--底部部分结束-->
+</div>
+
+<script src="../js/index.js"></script>
+<script>
+        function show_num(n) {
+            $(".t_num i").remove();
+            var isFloat=false;
+            //获取到数字的长度
+            var len = String(n).length;
+//            alert(len);//10
+            for (var i = 0; i < len; i++) {
+                    $(".t_num").append("<i></i>");
+                    //向页面追加i标签
+                var num = String(n).charAt(i);//找到每个位置所对应的数字
+                if(isFloat){
+                    $('i:last').addClass("aa");
+                }
+//                alert(num);
+                if(num=="."){
+                    isFloat=true;
+                    var y = -parseInt(10) * 44;
+                }else{
+                    var y = -parseInt(num) * 44; //y轴位置
+                }
+
+                var obj = $(".t_num i").eq(i);
+                obj.animate({ //滚动动画
+                            backgroundPosition: '(0 ' + String(y) + 'px)'
+                        }, 'slow', 'swing', function () {
+                        }
+                );
+            }
+        }
+        function getdata(){
+            $.ajax({
+                url: 'data.php',
+                type: 'POST',
+                dataType: "json",
+                cache: false,
+                timeout: 10000,
+                success: function(data){
+                    show_num(data.count);
+                },
+                error: function(data){
+                    var count=data.count;
+                    count=1234567.67;
+                    show_num(count);
+                }
+            });
+        }
+        $(function(){
+//            show_num(12345.12);
+//            setInterval('show_num(123.78)', 3000);
+            getdata();
+            setInterval('getdata()', 3000);//每隔3秒执行一次
+
+        })
+</script>
+</body>
+</html>
